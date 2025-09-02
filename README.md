@@ -1,26 +1,34 @@
 # Simple 4-bit Arithmetic Logic Unit (ALU) Design in VHDL
 
-This project implements a 4-bit ALU performing XOR, NAND, addition, and subtraction on two 4-bit inputs. The design uses modular VHDL entities and includes a test bench for simulation.
+## Objective  
+The goal of this project is to design and simulate a **combinational circuit** capable of performing four arithmetic and logic operations on two 4-bit inputs using **VHDL in Vivado**.  
+By completing this project, the student will:  
+- Gain essential VHDL knowledge to design combinational circuits.  
+- Detect and correct design errors.  
+- Verify the correctness of truth tables and simulation results.  
 
 ---
 
-## Project Structure
+## Problem Statement  
+Design a combinational system that performs **four operations** with two 4-bit numbers `A` and `B`.  
+The system is a very simple **Arithmetic Logic Unit (ALU)** with the following operations:  
 
-- **TC22_SBC.vhd** – 1-bit full adder  
-- **TC22_SUM4.vhd** – 4-bit adder using TC22_SBC  
-- **TC22_SR4.vhd** – 4-bit sum/subtract unit with carry  
-- **TC22_XOR4.vhd** – 4-bit XOR unit  
-- **TC22_NAND4.vhd** – 4-bit NAND unit  
-- **TC22_MUX2b4.vhd** – 2-to-1 multiplexer for 4-bit data  
-- **TC22_MUX4b4.vhd** – 4-to-1 multiplexer using TC22_MUX2b4  
-- **TC22_ALU4.vhd** – Complete 4-bit ALU  
-- **TB_TC22_ALU4.vhd** – Test bench with predefined simulation vectors  
+- `XOR`: Z = A ⊕ B  
+- `NAND`: Z = ¬(A ∧ B)  
+- `ADD`: Z = A + B, where A and B are in **two’s complement (Ca2)**  
+- `SUBTRACT`: Z = A − B, where A and B are in **two’s complement (Ca2)**  
+
+The ALU generates:  
+- A 4-bit output `Z` (result of the selected operation)  
+- A 1-bit output `Cout` (carry/borrow flag, used only in addition and subtraction, 0 otherwise)
+
+![ALU Block Diagram](./images/alu_block.png)
 
 ---
 
-## ALU Operation
+## ALU Operation  
 
-The ALU performs four operations selected by the `S1 S0` inputs:
+The operation is selected using the **control signals `S1` and `S0`**:  
 
 | S1 | S0 | Operation |
 |----|----|-----------|
@@ -29,63 +37,93 @@ The ALU performs four operations selected by the `S1 S0` inputs:
 | 1  | 0  | ADD       |
 | 1  | 1  | SUBTRACT  |
 
-- Output `Z` – 4-bit result  
-- Output `Cout` – Carry out (active for ADD and SUBTRACT, 0 for XOR/NAND)  
+- **Z** → 4-bit result  
+- **Cout** → Carry/borrow (valid for ADD and SUBTRACT, 0 otherwise)  
 
 ---
 
-## Simulation Plan
+## Project Structure  
+
+Each module is implemented in VHDL, with circuit diagrams provided.  
+
+- **`TC22_SBC.vhd`** – 1-bit full adder  
+  - Implements sum and carry for single-bit inputs.  
+  - ![SBC Diagram](images/TC22_SBC.png)  
+
+- **`TC22_SUM4.vhd`** – 4-bit adder using `TC22_SBC`  
+  - Instantiates four `SBC` units for bitwise addition.  
+  - ![SUM4 Diagram](images/TC22_SUM4.png)  
+
+- **`TC22_SR4.vhd`** – 4-bit sum/subtract unit with carry  
+  - Uses `TC22_SUM4` plus additional combinational logic for subtraction.  
+  - ![SR4 Diagram](images/TC22_SR4.png)  
+
+- **`TC22_NAND4.vhd`** – 4-bit NAND unit  
+  - Performs bitwise NAND of inputs A and B.  
+  - ![NAND4 Diagram](images/TC22_NAND4.png)  
+
+- **`TC22_XOR4.vhd`** – 4-bit XOR unit  
+  - Performs bitwise XOR of inputs A and B.  
+  - ![XOR4 Diagram](images/TC22_XOR4.png)  
+
+- **`TC22_MUX2b4.vhd`** – 2-to-1 multiplexer (4-bit data)  
+  - Selects between two 4-bit inputs.  
+  - ![MUX2b4 Diagram](images/TC22_MUX2b4.png)  
+
+- **`TC22_MUX4b4.vhd`** – 4-to-1 multiplexer using `MUX2b4`  
+  - Selects between four 4-bit inputs based on S1, S0.  
+  - ![MUX4b4 Diagram](images/TC22_MUX4b4.png)  
+
+- **`TC22_ALU4.vhd`** – Complete 4-bit ALU  
+  - Instantiates `SR4`, `XOR4`, `NAND4`, and `MUX4b4` to build the ALU.  
+  - ![ALU4 Diagram](images/TC22_ALU4.png)  
+
+- **`TB_TC22_ALU4.vhd`** – Test bench  
+  - Provides predefined simulation vectors.  
+  - ![TestBench Diagram](images/TB_TC22_ALU4.png)  
+
+---
+
+## Simulation Plan  
 
 **Simulation intervals:**
 
-| Time (ns) | Operation | Inputs A, B |
-|-----------|-----------|-------------|
-| 0–10      | A+B       | 2, 3        |
-| 10–20     | A−B       | 2, 3        |
-| 20–30     | A+B       | -5, 3       |
-| 30–40     | A−B       | -5, 3       |
-| 40–50     | A+B       | 5, 3        |
-| 50–60     | A XOR B   | 1011, 0100  |
-| 60–70     | A NAND B  | 1011, 0100  |
-
-**Simulation waveform images:**  
-<!-- Insert simulation images here -->  
-![Simulation 1](./images/sim1.png)  
-![Simulation 2](./images/sim2.png)  
+| Time (ns) | Operation | Inputs (A, B) |
+|-----------|-----------|---------------|
+| 0–10      | A + B     | 2, 3          |
+| 10–20     | A − B     | 2, 3          |
+| 20–30     | A + B     | -5, 3         |
+| 30–40     | A − B     | -5, 3         |
+| 40–50     | A + B     | 5, 3          |
+| 50–60     | A ⊕ B     | 1011, 0100    |
+| 60–70     | A NAND B  | 1011, 0100    |
 
 ---
 
-## ALU Output Table
+## ALU Output Results  
 
-| Time (ns) | Z (4-bit) | Cout | Decimal (2's complement) |
-|-----------|-----------|------|--------------------------|
-| 5         | 0101      | 0    | 5                        |
-| 15        | 1111      | 0    | -1                       |
-| 25        | 1110      | 0    | -2                       |
-| 35        | 1000      | 1    | -8                       |
-| 45        | 1000      | 0    | +8 (incorrect)           |
-| 55        | 1111      | 0    | -1                       |
-| 65        | 1111      | 0    | -1                       |
-
----
-
-## Questions About Results
-
-**Q1: Is the 4-bit result at 35 ns correct? Why?**  
-Yes. Z = `1000` and Cout = 1. In 4-bit 2's complement, this represents -8. The Cout indicates an overflow, correctly signaling that the result exceeds the 4-bit signed range.
-
-**Q2: Is the 4-bit result at 45 ns correct? Why?**  
-No. Z = `1000` and Cout = 0, which appears as +8. This is incorrect because the 2's complement result should be interpreted as -8. The lack of Cout indicates the overflow was not properly detected.
+| Time (ns) | Output (Z) | Cout | Decimal (Ca2) |
+|-----------|------------|------|----------------|
+| 5         | 0101       | 0    | 5              |
+| 15        | 1111       | 0    | -1             |
+| 25        | 1110       | 0    | -2             |
+| 35        | 1000       | 1    | -8 (overflow)  |
+| 45        | 1000       | 0    | 8 (incorrect)  |
+| 55        | 1111       | 0    | -1             |
+| 65        | 1111       | 0    | -1             |
 
 ---
 
-## Notes
+## Discussion of Results  
 
-- The design uses a modular approach; each entity can be tested independently.  
-- The ALU fully supports 4-bit arithmetic operations with proper overflow detection.  
-- Test bench covers both positive and negative inputs in 2's complement format.  
+At **35 ns**, the ALU outputs `Z = 1000` and `Cout = 1`.  
+- Interpreted in two’s complement (4 bits), this corresponds to **-8**.  
+- The result is **correct**, since the carry indicates that the sum exceeded the representable range.  
 
----
+At **45 ns**, the ALU outputs `Z = 1000` and `Cout = 0`.  
+- This would correspond to **+8**, but it is **not correct** in two’s complement.  
+- The absence of `Cout = 1` shows that the ALU did not detect overflow properly.  
 
-<!-- Optional: You can add a diagram of the full ALU here -->  
-![ALU Block Diagram](./images/alu_block.png)
+In two’s complement arithmetic with 4 bits, the valid range is **-8 to +7**. Any result outside this range must trigger an **overflow flag**.  
+This case illustrates how the ALU must correctly handle overflow detection to maintain valid two’s complement behavior.  
+
