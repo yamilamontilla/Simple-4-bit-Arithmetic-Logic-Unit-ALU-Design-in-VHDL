@@ -113,6 +113,31 @@ Each module is implemented in VHDL, with circuit diagrams provided.
 | 55        | 1111       | 0    | -1             |
 | 65        | 1111       | 0    | -1             |
 
+
+### Simulation Waveforms  
+
+**5 ns – Result = 0101 (5 in Ca2)**  
+![Waveform 5ns](img/Salidas%205ns.png)  
+
+**15 ns – Result = 1111 (-1 in Ca2)**  
+![Waveform 15ns](img/Salidas%2015ns.png)  
+
+**25 ns – Result = 1110 (-2 in Ca2)**  
+![Waveform 25ns](img/Salidas%2025ns.png)  
+
+**35 ns – Result = 1000 with Cout=1 (−8 in Ca2, overflow detected)**  
+![Waveform 35ns](img/Salidas%2035ns.png)  
+
+**45 ns – Result = 1000 with Cout=0 (incorrect, shows +8)**  
+![Waveform 45ns](img/Salidas%2045ns.png)  
+
+**55 ns – Result = 1111 (−1 in Ca2)**  
+![Waveform 55ns](img/Salidas%2055ns.png)  
+
+**65 ns – Result = 1111 (−1 in Ca2)**  
+![Waveform 65ns](img/Salidas%2065ns.png)  
+
+
 ---
 
 ## Discussion of Results  
