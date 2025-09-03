@@ -22,7 +22,8 @@ The ALU generates:
 - A 4-bit output `Z` (result of the selected operation)  
 - A 1-bit output `Cout` (carry/borrow flag, used only in addition and subtraction, 0 otherwise)
 
-![ALU Block Diagram](./images/alu_block.png)
+![Problem Statement](img/Problem%20Statement%20.png)
+
 
 ---
 
@@ -48,39 +49,39 @@ Each module is implemented in VHDL, with circuit diagrams provided.
 
 - **`TC22_SBC.vhd`** – 1-bit full adder  
   - Implements sum and carry for single-bit inputs.  
-  - ![SBC Diagram](images/TC22_SBC.png)  
+  - ![1-bit Full Adder](img/TC22_SBC.png)  
 
 - **`TC22_SUM4.vhd`** – 4-bit adder using `TC22_SBC`  
   - Instantiates four `SBC` units for bitwise addition.  
-  - ![SUM4 Diagram](images/TC22_SUM4.png)  
+  - ![4-bit Adder](img/TC22_SUM4.png)  
 
 - **`TC22_SR4.vhd`** – 4-bit sum/subtract unit with carry  
   - Uses `TC22_SUM4` plus additional combinational logic for subtraction.  
-  - ![SR4 Diagram](images/TC22_SR4.png)  
+  - ![Sum/Subtract Unit](img/TC22_SR4.png)  
 
 - **`TC22_NAND4.vhd`** – 4-bit NAND unit  
   - Performs bitwise NAND of inputs A and B.  
-  - ![NAND4 Diagram](images/TC22_NAND4.png)  
+  - ![NAND Unit](img/TC22_NAND4.png)  
 
 - **`TC22_XOR4.vhd`** – 4-bit XOR unit  
   - Performs bitwise XOR of inputs A and B.  
-  - ![XOR4 Diagram](images/TC22_XOR4.png)  
+  - ![XOR Unit](img/TC22_XOR4.png)  
 
 - **`TC22_MUX2b4.vhd`** – 2-to-1 multiplexer (4-bit data)  
   - Selects between two 4-bit inputs.  
-  - ![MUX2b4 Diagram](images/TC22_MUX2b4.png)  
+  - ![MUX 2-to-1](img/TC22_MUX2b4.png)  
 
 - **`TC22_MUX4b4.vhd`** – 4-to-1 multiplexer using `MUX2b4`  
   - Selects between four 4-bit inputs based on S1, S0.  
-  - ![MUX4b4 Diagram](images/TC22_MUX4b4.png)  
+  - ![MUX 4-to-1](img/TC22_MUX4b4.png)  
 
 - **`TC22_ALU4.vhd`** – Complete 4-bit ALU  
   - Instantiates `SR4`, `XOR4`, `NAND4`, and `MUX4b4` to build the ALU.  
-  - ![ALU4 Diagram](images/TC22_ALU4.png)  
+  - ![ALU](img/TC22_ALU4.png)  
 
 - **`TB_TC22_ALU4.vhd`** – Test bench  
   - Provides predefined simulation vectors.  
-  - ![TestBench Diagram](images/TB_TC22_ALU4.png)  
+  - ![Test Bench](img/TEST%20BENCH.png)
 
 ---
 
